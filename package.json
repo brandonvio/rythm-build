@@ -21,6 +21,21 @@
     "typescript": "~3.9.7"
   },
   "dependencies": {
+    "@aws-cdk/aws-certificatemanager": "^1.78.0",
+    "@aws-cdk/aws-cloudfront": "^1.78.0",
+    "@aws-cdk/aws-cloudfront-origins": "^1.78.0",
+    "@aws-cdk/aws-codebuild": "^1.78.0",
+    "@aws-cdk/aws-codepipeline": "^1.78.0",
+    "@aws-cdk/aws-codepipeline-actions": "^1.78.0",
+    "@aws-cdk/aws-cognito": "^1.78.0",
+    "@aws-cdk/aws-dynamodb": "^1.78.0",
+    "@aws-cdk/aws-ec2": "^1.78.0",
+    "@aws-cdk/aws-elasticloadbalancingv2": "^1.78.0",
+    "@aws-cdk/aws-elasticloadbalancingv2-targets": "^1.78.0",
+    "@aws-cdk/aws-msk": "^1.78.0",
+    "@aws-cdk/aws-route53": "^1.78.0",
+    "@aws-cdk/aws-route53-targets": "^1.78.0",
+    "@aws-cdk/aws-s3": "^1.78.0",
     "@aws-cdk/core": "1.78.0",
     "source-map-support": "^0.5.16"
   }

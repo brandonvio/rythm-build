@@ -1,0 +1,20 @@
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+      docker: 19
+  pre_build:
+    commands:
+      - echo pre_build.
+      - aws --version
+  build:
+    commands:
+      - echo Build started on `date`
+      - echo Building the Docker image...
+      - docker --version
+  post_build:
+    commands:
+      - echo Build completed on `date`
+      - echo Pushing the Docker images...
+      - docker --version
