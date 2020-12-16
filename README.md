@@ -1,15 +1,11 @@
-# Rythm Price Microservice
+# Rythm Build
 
-This project is the pricing microservice of the rythm application.
-There are two projects in this repo, "rythm-price-micro-serv" and "rythm-price-micro-serv-cdk".
-### rythm-price-micro-serv
+This project is the "build" project for the rythm application. This project contains the pipeline definitions in CDK for the building and deploying of the rythm applications. Links to the rythm microservice projects, that are deployed by this pipeline, are below.
+
+### [rythm-price-micro-serv](https://github.com/brandonvio/rythm-micro-serv)
 The "rythm-price-micro-serv" is the Python application that consumes a HTTP pricing stream from the Oanda API and sends the received messages to a Kafka Topic hosted on the Confluent Cloud platform. The Python application is hosted in Docker and ran in ECS Fargate Task on AWS.
 
-### rythm-price-micro-serv-cdk
+### [rythm-price-micro-serv-cdk](https://github.com/brandonvio/rythm-micro-serv)
 The "rythm-price-micro-serv-cdk" project is the CDK application that provisions the infrastructure for the application.
 
-![Architecture](https://github.com/brandonvio/rythm-micro-serv/blob/main/docs/images/arch-overview.png?raw=true)
-
-![Kafka Topic](https://github.com/brandonvio/rythm-micro-serv/blob/main/docs/images/kafka-topic.png?raw=true)
-
-![Kafka Consumer](https://github.com/brandonvio/rythm-micro-serv/blob/main/docs/images/consumer-py.png?raw=true)
+![Architecture](https://github.com/brandonvio/rythm-build/blob/main/docs/images/build-arch.png?raw=true)
