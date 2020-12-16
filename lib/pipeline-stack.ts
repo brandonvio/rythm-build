@@ -15,19 +15,18 @@ export class PipelineStack extends cdk.Stack {
     );
 
     const buildRole = new iam.Role(this, "BuildRole", {
-      roleName: "HiddenRoadPipelineRole",
+      roleName: "rythm-build-role",
       assumedBy: new iam.ServicePrincipal("codebuild.amazonaws.com"),
       managedPolicies: [powerUserPolicy],
     });
 
     const pipeline = new codepipeline.Pipeline(this, "HiddenRoadPipeline", {
       pipelineName: "hidden-road-pipeline",
-      // role:
     });
 
     const sourceOutput = new codepipeline.Artifact();
     const sourceAction = new codepipeline_actions.GitHubSourceAction({
-      actionName: "GitHub_Source",
+      actionName: "github-source",
       owner: "brandonvio",
       repo: "rythm-micro-serv",
       oauthToken: cdk.SecretValue.secretsManager("brandonvio-github-auth-token"),
@@ -36,11 +35,12 @@ export class PipelineStack extends cdk.Stack {
     });
 
     pipeline.addStage({
-      stageName: "Source",
+      stageName: "pull-source",
       actions: [sourceAction],
     });
 
     const buildMicroServProject = new codebuild.PipelineProject(this, "BuildMicroServProject", {
+      projectName: "rythm-price-micro-serv-proj",
       buildSpec: codebuild.BuildSpec.fromSourceFilename("build.yaml"),
       role: buildRole,
       environment: {
@@ -56,7 +56,7 @@ export class PipelineStack extends cdk.Stack {
     });
 
     pipeline.addStage({
-      stageName: "build-stage-01",
+      stageName: "build-stage",
       actions: [buildAction],
     });
   }
