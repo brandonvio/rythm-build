@@ -42,8 +42,11 @@ export class PipelineStack extends cdk.Stack {
     });
 
     const buildMicroServProject = new codebuild.PipelineProject(this, "BuildMicroServProject", {
-      buildSpec: codebuild.BuildSpec.fromSourceFilename("rythm-build.yaml"),
+      buildSpec: codebuild.BuildSpec.fromSourceFilename("build.yaml"),
       role: buildRole,
+      environment: {
+        privileged: true,
+      },
     });
 
     const buildAction = new codepipeline_actions.CodeBuildAction({
