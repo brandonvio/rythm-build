@@ -3,25 +3,27 @@ import * as codebuild from "@aws-cdk/aws-codebuild";
 import * as codepipeline from "@aws-cdk/aws-codepipeline";
 import * as codepipeline_actions from "@aws-cdk/aws-codepipeline-actions";
 import * as iam from "@aws-cdk/aws-iam";
+import { Role } from "@aws-cdk/aws-iam";
 
 export class PipelineStack extends cdk.Stack {
   constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
 
-    const powerUserPolicy = iam.ManagedPolicy.fromManagedPolicyArn(
-      this,
-      "BuildPolicy",
-      "arn:aws:iam::aws:policy/PowerUserAccess"
-    );
-
     const buildRole = new iam.Role(this, "BuildRole", {
       roleName: "rythm-build-role",
       assumedBy: new iam.ServicePrincipal("codebuild.amazonaws.com"),
-      managedPolicies: [powerUserPolicy],
     });
 
-    const pipeline = new codepipeline.Pipeline(this, "HiddenRoadPipeline", {
-      pipelineName: "hidden-road-pipeline",
+    buildRole.addToPolicy(
+      new iam.PolicyStatement({
+        resources: ["*"],
+        actions: ["*"],
+        effect: iam.Effect.ALLOW,
+      })
+    );
+
+    const pipeline = new codepipeline.Pipeline(this, "RythmSvcPipeline", {
+      pipelineName: "rythm-svc-pipeline",
     });
 
     const sourceOutput = new codepipeline.Artifact();
@@ -35,7 +37,7 @@ export class PipelineStack extends cdk.Stack {
     });
 
     pipeline.addStage({
-      stageName: "pull-source",
+      stageName: "pull-source1",
       actions: [sourceAction],
     });
 
