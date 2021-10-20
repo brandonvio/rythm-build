@@ -15,11 +15,14 @@ export class RythmInfrastructurePipelineStack extends cdk.Stack {
             pipelineName: 'rythm-infrastructure-pipeline',
         })
 
+        const codestartConnectionArn = cdk.Fn.importValue(
+            'output-brandonvio-github-connection'
+        )
+
         const sourceOutput = new codepipeline.Artifact()
         const sourceAction = new actions.CodeStarConnectionsSourceAction({
             actionName: 'github-source-action',
-            connectionArn:
-                'arn:aws:codestar-connections:us-east-1:919217319840:connection/46b0165f-fb81-43ea-97dd-8e303e3a9221',
+            connectionArn: codestartConnectionArn,
             owner: 'brandonvio',
             repo: 'rythm-infrastructure',
             output: sourceOutput,
@@ -31,7 +34,7 @@ export class RythmInfrastructurePipelineStack extends cdk.Stack {
         })
 
         const project = new codebuild.PipelineProject(this, 'Project', {
-            projectName: 'rythm-build-project',
+            projectName: 'rythm-infrastructure-project',
             buildSpec: cb.BuildSpec.fromSourceFilename('buildspec.yml'),
             environment: {
                 computeType: codebuild.ComputeType.SMALL,

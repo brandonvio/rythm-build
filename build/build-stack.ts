@@ -1,6 +1,7 @@
 import * as cdk from 'aws-cdk-lib'
 import * as ecr from 'aws-cdk-lib/aws-ecr'
 import * as cb from 'aws-cdk-lib/aws-codebuild'
+import * as codestarconnections from 'aws-cdk-lib/aws-codestarconnections'
 import * as iam from 'aws-cdk-lib/aws-iam'
 import { Construct } from 'constructs'
 
@@ -37,6 +38,20 @@ export class RythmBuildStack extends cdk.Stack {
                 buildImage: cb.LinuxBuildImage.STANDARD_5_0,
                 privileged: true,
             },
+        })
+
+        const githubConnection = new codestarconnections.CfnConnection(
+            this,
+            'RythmCodestarConnection',
+            {
+                connectionName: 'brandovio-github',
+                providerType: 'GitHub',
+            }
+        )
+
+        new cdk.CfnOutput(this, 'GithubConnectionOutput', {
+            value: githubConnection.attrConnectionArn,
+            exportName: 'output-brandonvio-github-connection',
         })
     }
 }
