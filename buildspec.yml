@@ -16,4 +16,6 @@ phases:
       - npm build
       - cd $CODEBUILD_SRC_DIR/pipelines/infrastructure
       - cdk synth
+      - dt=$(date '+%Y%m%d%H%M%S');
+      - cdk diff --no-color &> infrastructure-diff-$dt.txt
       - cdk deploy

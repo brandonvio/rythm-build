@@ -26,10 +26,10 @@ export class RythmInfrastructurePipelineStack extends cdk.Stack {
             owner: 'brandonvio',
             repo: 'rythm-infrastructure',
             output: sourceOutput,
-            branch: 'master', // default: 'master'
+            branch: 'main', // default: 'master'
         })
         pipeline.addStage({
-            stageName: 'Source',
+            stageName: 'SourceStage',
             actions: [sourceAction],
         })
 
@@ -43,13 +43,13 @@ export class RythmInfrastructurePipelineStack extends cdk.Stack {
             },
         })
         const buildAction = new actions.CodeBuildAction({
-            actionName: 'Build',
+            actionName: 'BuildAction',
             project,
             input: sourceOutput,
             outputs: [new codepipeline.Artifact()], // optional
         })
         pipeline.addStage({
-            stageName: 'Build',
+            stageName: 'BuildStage',
             actions: [buildAction],
         })
 

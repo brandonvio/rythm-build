@@ -9,6 +9,9 @@ export class RythmBuildStack extends cdk.Stack {
     constructor(scope: Construct, id: string, props?: cdk.StackProps) {
         super(scope, id, props)
 
+        // create a KMS key.
+        // create roles for codebuild and codepipeline.
+        // create s3 bucket for diffs.
         const source = cb.Source.gitHub({
             owner: 'brandonvio',
             repo: 'rythm-build',
