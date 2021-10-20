@@ -22,7 +22,7 @@ export class RythmBuildInfratructureStack extends cdk.Stack {
 
         new cdk.CfnOutput(this, 'GithubConnectionOutput', {
             value: githubConnection.attrConnectionArn,
-            exportName: 'output-brandonvio-github-connection',
+            exportName: 'output-brandonvio-github-connection1',
         })
     }
 }
