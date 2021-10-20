@@ -132,7 +132,8 @@ Resources:
                 Provider: CodeStarSourceConnection
                 Version: "1"
               Configuration:
-                ConnectionArn: arn:aws:codestar-connections:us-east-1:919217319840:connection/46b0165f-fb81-43ea-97dd-8e303e3a9221
+                ConnectionArn:
+                  Fn::ImportValue: output-brandonvio-github-connection
                 FullRepositoryId: brandonvio/rythm-infrastructure
                 BranchName: master
               Name: github-source-action
@@ -206,7 +207,8 @@ Resources:
         Statement:
           - Action: codestar-connections:UseConnection
             Effect: Allow
-            Resource: arn:aws:codestar-connections:us-east-1:919217319840:connection/46b0165f-fb81-43ea-97dd-8e303e3a9221
+            Resource:
+              Fn::ImportValue: output-brandonvio-github-connection
           - Action:
               - s3:GetObject*
               - s3:GetBucket*
@@ -420,7 +422,7 @@ Resources:
         Fn::GetAtt:
           - PipelineArtifactsBucketEncryptionKey01D58D69
           - Arn
-      Name: rythm-build-project
+      Name: rythm-infrastructure-project
     Metadata:
       aws:cdk:path: RythmInfrastructurePipelineStack/Project/Resource
   CDKMetadata:
