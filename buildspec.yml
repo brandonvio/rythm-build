@@ -14,8 +14,19 @@ phases:
       - echo --working --629
       - npm install
       - npm build
-      - cd $CODEBUILD_SRC_DIR/pipelines/infrastructure
-      - cdk synth
+      # build-infrastructure
       - dt=$(date '+%Y%m%d%H%M%S');
-      - cdk diff --no-color &> infrastructure-diff-$dt.txt
+      - template_file_name=build-infrastructure-template-$dt.yaml
+      - diff_file_name=build-infrastructure-diff-$dt.txt
+      - cd $CODEBUILD_SRC_DIR/build-infrastructure
+      - cdk synth > $template_file_name
+      - aws s3 cp $template_file_name s3://build.cdk.rythm.cc/build-infrastructure/$template_file_name
+      - cdk diff --no-color &> $diff_file_name
+      - aws s3 cp $diff_file_name s3://build.cdk.rythm.cc/build-infrastructure/$diff_file_name
       - cdk deploy
+      # pipelines
+      # - cd $CODEBUILD_SRC_DIR/pipelines/infrastructure
+      # - cdk synth
+      # - dt=$(date '+%Y%m%d%H%M%S');
+      # - cdk diff --no-color &> infrastructure-diff-$dt.txt
+      # - cdk deploy

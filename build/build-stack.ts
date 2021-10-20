@@ -1,23 +1,12 @@
 import * as cdk from 'aws-cdk-lib'
-import * as ecr from 'aws-cdk-lib/aws-ecr'
+import * as s3 from 'aws-cdk-lib/aws-s3'
 import * as cb from 'aws-cdk-lib/aws-codebuild'
-import * as codestarconnections from 'aws-cdk-lib/aws-codestarconnections'
 import * as iam from 'aws-cdk-lib/aws-iam'
 import { Construct } from 'constructs'
 
 export class RythmBuildStack extends cdk.Stack {
     constructor(scope: Construct, id: string, props?: cdk.StackProps) {
         super(scope, id, props)
-
-        // create a KMS key.
-        // create roles for codebuild and codepipeline.
-        // create s3 bucket for diffs.
-        const source = cb.Source.gitHub({
-            owner: 'brandonvio',
-            repo: 'rythm-build',
-            branchOrRef: 'main',
-            webhook: true,
-        })
 
         const buildRole = new iam.Role(this, 'BuildRole', {
             roleName: 'rythm-build-role',
@@ -35,7 +24,12 @@ export class RythmBuildStack extends cdk.Stack {
         new cb.Project(this, 'RythmBuildProject', {
             role: buildRole,
             projectName: 'rythm-build-project',
-            source: source,
+            source: cb.Source.gitHub({
+                owner: 'brandonvio',
+                repo: 'rythm-build',
+                branchOrRef: 'main',
+                webhook: true,
+            }),
             buildSpec: cb.BuildSpec.fromSourceFilename('buildspec.yml'),
             environment: {
                 buildImage: cb.LinuxBuildImage.STANDARD_5_0,
@@ -43,18 +37,11 @@ export class RythmBuildStack extends cdk.Stack {
             },
         })
 
-        const githubConnection = new codestarconnections.CfnConnection(
-            this,
-            'RythmCodestarConnection',
-            {
-                connectionName: 'brandovio-github',
-                providerType: 'GitHub',
-            }
-        )
-
-        new cdk.CfnOutput(this, 'GithubConnectionOutput', {
-            value: githubConnection.attrConnectionArn,
-            exportName: 'output-brandonvio-github-connection',
+        new s3.Bucket(this, 'RythmBuildBucket', {
+            bucketName: 'build.cdk.rythm.cc',
+            encryption: s3.BucketEncryption.S3_MANAGED,
+            blockPublicAccess: s3.BlockPublicAccess.BLOCK_ALL,
+            publicReadAccess: false,
         })
     }
 }
