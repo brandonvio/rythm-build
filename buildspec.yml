@@ -22,9 +22,9 @@ phases:
       - cdk synth > $template_file_name
       - cat $template_file_name
       - aws s3 cp $template_file_name s3://build.cdk.rythm.cc/build-infrastructure/$template_file_name
-      # - cdk diff -c aws-cdk:enableDiffNoFail=true &> diff.txt
-      # - cat diff.txt
-      - cdk diff -c aws-cdk:enableDiffNoFail=true
+      - cdk diff -c aws-cdk:enableDiffNoFail=true 2&> diff.txt
+      - cat diff.txt
+      # - cdk diff -c aws-cdk:enableDiffNoFail=true
       # - aws s3 cp diff.txt s3://build.cdk.rythm.cc/build-infrastructure/diff.txt
       # - cdk deploy
       # pipelines
