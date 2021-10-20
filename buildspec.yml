@@ -11,7 +11,7 @@ phases:
       - aws ecr get-login-password --region us-west-2 | docker login --username AWS --password-stdin 061973135686.dkr.ecr.us-west-2.amazonaws.com
   build:
     commands:
-      - echo --working
+      - echo --working --629
       - npm install
       - npm build
       - cd $CODEBUILD_SRC_DIR/pipelines/infrastructure
