@@ -17,11 +17,11 @@ phases:
       # build-infrastructure
       - dt=$(date '+%Y%m%d%H%M%S');
       - template_file_name=build-infrastructure-template-$dt.yaml
-      - diff_file_name=build-infrastructure-diff-$dt.txt
       - cd $CODEBUILD_SRC_DIR/build-infrastructure
       - cdk synth > $template_file_name
       - cat $template_file_name
       - aws s3 cp $template_file_name s3://build.cdk.rythm.cc/build-infrastructure/$template_file_name
+      - cdk diff -c aws-cdk:enableDiffNoFail=true
       - cdk deploy
       # pipelines
       # - cd $CODEBUILD_SRC_DIR/pipelines/infrastructure
