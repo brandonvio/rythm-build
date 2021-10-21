@@ -24,6 +24,8 @@ export class RythmPipelinesStack extends cdk.Stack {
                 bucketName: 'codepipeline.rythm.cc',
                 encryptionKey: kmsKey,
                 encryption: s3.BucketEncryption.KMS,
+                blockPublicAccess: s3.BlockPublicAccess.BLOCK_ALL,
+                publicReadAccess: false,
             }
         )
 
