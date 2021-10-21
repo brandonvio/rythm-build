@@ -34,7 +34,7 @@ export class RythmStandardPipeline extends Construct {
             owner: 'brandonvio',
             repo: props.repoName,
             output: sourceOutput,
-            branch: 'main', // default: 'master'
+            branch: 'main',
         })
         pipeline.addStage({
             stageName: 'SourceStage',
@@ -43,7 +43,9 @@ export class RythmStandardPipeline extends Construct {
 
         const project = new codebuild.PipelineProject(this, 'Project', {
             projectName: `${props.pipelineName}-project`,
-            buildSpec: codebuild.BuildSpec.fromSourceFilename('buildspec.yml'),
+            buildSpec: codebuild.BuildSpec.fromSourceFilename(
+                'deployment/buildspec.yml'
+            ),
             environment: {
                 computeType: codebuild.ComputeType.SMALL,
                 buildImage: codebuild.LinuxBuildImage.STANDARD_5_0,

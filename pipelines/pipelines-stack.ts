@@ -2,7 +2,7 @@ import * as cdk from 'aws-cdk-lib'
 import * as iam from 'aws-cdk-lib/aws-iam'
 import * as codestarconnections from 'aws-cdk-lib/aws-codestarconnections'
 import { Construct } from 'constructs'
-import { RythmStandardPipeline } from './lib/standard-pipeline'
+import { RythmStandardPipeline } from './standard-pipeline'
 
 export class RythmPipelinesStack extends cdk.Stack {
     constructor(scope: Construct, id: string, props?: cdk.StackProps) {
