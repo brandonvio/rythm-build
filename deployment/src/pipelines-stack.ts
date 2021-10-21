@@ -2,6 +2,7 @@ import * as cdk from 'aws-cdk-lib'
 import * as iam from 'aws-cdk-lib/aws-iam'
 import * as kms from 'aws-cdk-lib/aws-kms'
 import * as s3 from 'aws-cdk-lib/aws-s3'
+import * as ecr from 'aws-cdk-lib/aws-ecr'
 import * as codestarconnections from 'aws-cdk-lib/aws-codestarconnections'
 import { Construct } from 'constructs'
 import { RythmStandardPipeline } from './standard-pipeline'
@@ -11,7 +12,10 @@ export class RythmPipelinesStack extends cdk.Stack {
     constructor(scope: Construct, id: string, props?: cdk.StackProps) {
         super(scope, id, props)
 
-        // create a KMS key.
+        new ecr.Repository(this, 'RythmPythomSlimBuster', {
+            repositoryName: 'python-38-slim-buster',
+        })
+
         const kmsKey = new kms.Key(this, 'RythmKmsKey', {
             description: 'Rythm CodePipeline KMS key.',
             alias: 'rythm-codepipeline-kms-key',
