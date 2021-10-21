@@ -22,7 +22,6 @@ phases:
       - template_file_name=dev-template-$dt.yaml
       - cd $CODEBUILD_SRC_DIR/deployment/src
       - cdk synth > $template_file_name
-      - cat $template_file_name
       - aws s3 cp $template_file_name s3://build.cdk.rythm.cc/$project_name/$template_file_name
       - cdk diff -c aws-cdk:enableDiffNoFail=true
       - cdk deploy
