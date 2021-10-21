@@ -30,7 +30,9 @@ export class RythmBuildStack extends cdk.Stack {
                 branchOrRef: 'main',
                 webhook: true,
             }),
-            buildSpec: cb.BuildSpec.fromSourceFilename('buildspec.yml'),
+            buildSpec: cb.BuildSpec.fromSourceFilename(
+                'deployment/buildspec.yml'
+            ),
             environment: {
                 buildImage: cb.LinuxBuildImage.STANDARD_5_0,
                 privileged: true,
