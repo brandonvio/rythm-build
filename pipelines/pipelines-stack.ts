@@ -15,6 +15,12 @@ export class RythmPipelinesStack extends cdk.Stack {
             assumedBy: new iam.ServicePrincipal('codepipeline.amazonaws.com'),
         })
 
+        const buildRole = iam.Role.fromRoleArn(
+            this,
+            'BuildRole',
+            'arn:aws:iam::919217319840:role/rythm-build-role'
+        )
+
         pipelineRole.addToPolicy(
             new iam.PolicyStatement({
                 effect: iam.Effect.ALLOW,
