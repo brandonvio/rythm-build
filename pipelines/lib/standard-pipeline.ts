@@ -10,6 +10,7 @@ interface RythmStandardPipelineProps {
     readonly pipelineName: string
     readonly repoName: string
     readonly codestartConnectionArn: string
+    readonly pipelineRole: iam.IRole
 }
 
 export class RythmStandardPipeline extends Construct {
@@ -22,6 +23,7 @@ export class RythmStandardPipeline extends Construct {
 
         const pipeline = new codepipeline.Pipeline(this, 'Pipeline', {
             pipelineName: `${props.pipelineName}-pipeline`,
+            role: props.pipelineRole,
         })
 
         const sourceOutput = new codepipeline.Artifact()
