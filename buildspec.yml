@@ -11,21 +11,16 @@ phases:
       - aws ecr get-login-password --region us-west-2 | docker login --username AWS --password-stdin 061973135686.dkr.ecr.us-west-2.amazonaws.com
   build:
     commands:
+      # setup
       - echo --working --927
       - npm install
       - npm build
-      # build-infrastructure
       - dt=$(date '+%Y%m%d%H%M%S');
-      - template_file_name=build-infrastructure-template-$dt.yaml
-      - cd $CODEBUILD_SRC_DIR/build-infrastructure
+      # pipelines
+      - template_file_name=pipelines-template-$dt.yaml
+      - cd $CODEBUILD_SRC_DIR/pipelines
       - cdk synth > $template_file_name
       - cat $template_file_name
-      - aws s3 cp $template_file_name s3://build.cdk.rythm.cc/build-infrastructure/$template_file_name
+      - aws s3 cp $template_file_name s3://build.cdk.rythm.cc/pipelines/$template_file_name
       - cdk diff -c aws-cdk:enableDiffNoFail=true
       - cdk deploy
-      # pipelines
-      # - cd $CODEBUILD_SRC_DIR/pipelines/infrastructure
-      # - cdk synth
-      # - dt=$(date '+%Y%m%d%H%M%S');
-      # - cdk diff --no-color &> infrastructure-diff-$dt.txt
-      # - cdk deploy

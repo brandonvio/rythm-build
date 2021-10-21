@@ -1,4 +1,0 @@
-Stack RythmBuildInfratructureStack (rythm-build-infrastructure-stack)
-Outputs
-[~] Output GithubConnectionOutput GithubConnectionOutput: {"Value":{"Fn::GetAtt":["RythmCodestarConnection","ConnectionArn"]},"Export":{"Name":"output-brandonvio-github-connection"}} to {"Value":{"Fn::GetAtt":["RythmCodestarConnection","ConnectionArn"]},"Export":{"Name":"output-brandonvio-github-connection1"}}
-

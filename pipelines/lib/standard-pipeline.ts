@@ -1,30 +1,35 @@
 import * as cdk from 'aws-cdk-lib'
 import * as ecr from 'aws-cdk-lib/aws-ecr'
-import * as cb from 'aws-cdk-lib/aws-codebuild'
 import * as iam from 'aws-cdk-lib/aws-iam'
 import * as codepipeline from 'aws-cdk-lib/aws-codepipeline'
 import * as codebuild from 'aws-cdk-lib/aws-codebuild'
 import * as actions from 'aws-cdk-lib/aws-codepipeline-actions'
 import { Construct } from 'constructs'
 
-export class RythmInfrastructurePipelineStack extends cdk.Stack {
-    constructor(scope: Construct, id: string, props?: cdk.StackProps) {
-        super(scope, id, props)
+interface RythmStandardPipelineProps {
+    readonly pipelineName: string
+    readonly repoName: string
+    readonly codestartConnectionArn: string
+}
+
+export class RythmStandardPipeline extends Construct {
+    constructor(
+        scope: Construct,
+        id: string,
+        props: RythmStandardPipelineProps
+    ) {
+        super(scope, id)
 
         const pipeline = new codepipeline.Pipeline(this, 'Pipeline', {
-            pipelineName: 'rythm-infrastructure-pipeline',
+            pipelineName: `${props.pipelineName}-pipeline`,
         })
-
-        const codestartConnectionArn = cdk.Fn.importValue(
-            'output-brandonvio-github-connection'
-        )
 
         const sourceOutput = new codepipeline.Artifact()
         const sourceAction = new actions.CodeStarConnectionsSourceAction({
             actionName: 'GithubSourceAction',
-            connectionArn: codestartConnectionArn,
+            connectionArn: props.codestartConnectionArn,
             owner: 'brandonvio',
-            repo: 'rythm-infrastructure',
+            repo: props.repoName,
             output: sourceOutput,
             branch: 'main', // default: 'master'
         })
@@ -34,11 +39,11 @@ export class RythmInfrastructurePipelineStack extends cdk.Stack {
         })
 
         const project = new codebuild.PipelineProject(this, 'Project', {
-            projectName: 'rythm-infrastructure-project',
-            buildSpec: cb.BuildSpec.fromSourceFilename('buildspec.yml'),
+            projectName: `${props.pipelineName}-project`,
+            buildSpec: codebuild.BuildSpec.fromSourceFilename('buildspec.yml'),
             environment: {
                 computeType: codebuild.ComputeType.SMALL,
-                buildImage: cb.LinuxBuildImage.STANDARD_5_0,
+                buildImage: codebuild.LinuxBuildImage.STANDARD_5_0,
                 privileged: true,
             },
         })
