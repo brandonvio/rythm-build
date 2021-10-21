@@ -1,14 +1,32 @@
 import * as cdk from 'aws-cdk-lib'
 import * as iam from 'aws-cdk-lib/aws-iam'
+import * as kms from 'aws-cdk-lib/aws-kms'
+import * as s3 from 'aws-cdk-lib/aws-s3'
 import * as codestarconnections from 'aws-cdk-lib/aws-codestarconnections'
 import { Construct } from 'constructs'
 import { RythmStandardPipeline } from './standard-pipeline'
+import pipelinesConfig from './pipelines-config.json'
 
 export class RythmPipelinesStack extends cdk.Stack {
     constructor(scope: Construct, id: string, props?: cdk.StackProps) {
         super(scope, id, props)
 
         // create a KMS key.
+        const kmsKey = new kms.Key(this, 'RythmKmsKey', {
+            description: 'Rythm CodePipeline KMS key.',
+            alias: 'rythm-codepipeline-kms-key',
+        })
+
+        const codePipelineBucket = new s3.Bucket(
+            this,
+            'RythmCodePipelineBucket',
+            {
+                bucketName: 'codepipeline.rythm.cc',
+                encryptionKey: kmsKey,
+                encryption: s3.BucketEncryption.KMS,
+            }
+        )
+
         // create roles for codebuild and codepipeline.
         const pipelineRole = new iam.Role(this, 'PipelineRole', {
             roleName: 'rythm-pipeline-role',
@@ -38,16 +56,20 @@ export class RythmPipelinesStack extends cdk.Stack {
             }
         )
 
-        const pipeline = new RythmStandardPipeline(
-            this,
-            'InfrastructurePipeline',
-            {
-                pipelineName: 'rythm-infrastructure',
-                repoName: 'rythm-infrastructure',
-                codestartConnectionArn: githubConnection.attrConnectionArn,
-                pipelineRole,
-                buildRole,
-            }
-        )
+        for (const pipelineConfig of pipelinesConfig.standardPipelines) {
+            const pipeline = new RythmStandardPipeline(
+                this,
+                pipelineConfig.name,
+                {
+                    pipelineName: pipelineConfig.pipelineName,
+                    repoName: pipelineConfig.repoName,
+                    codestartConnectionArn: githubConnection.attrConnectionArn,
+                    pipelineRole,
+                    buildRole,
+                    kmsKey,
+                    codePipelineBucket,
+                }
+            )
+        }
     }
 }

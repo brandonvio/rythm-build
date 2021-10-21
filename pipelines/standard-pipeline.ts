@@ -1,9 +1,11 @@
 import * as cdk from 'aws-cdk-lib'
 import * as ecr from 'aws-cdk-lib/aws-ecr'
+import * as kms from 'aws-cdk-lib/aws-kms'
 import * as iam from 'aws-cdk-lib/aws-iam'
 import * as codepipeline from 'aws-cdk-lib/aws-codepipeline'
 import * as codebuild from 'aws-cdk-lib/aws-codebuild'
 import * as actions from 'aws-cdk-lib/aws-codepipeline-actions'
+import * as s3 from 'aws-cdk-lib/aws-s3'
 import { Construct } from 'constructs'
 
 interface RythmStandardPipelineProps {
@@ -12,6 +14,8 @@ interface RythmStandardPipelineProps {
     readonly codestartConnectionArn: string
     readonly pipelineRole: iam.IRole
     readonly buildRole: iam.IRole
+    readonly kmsKey: kms.IKey
+    readonly codePipelineBucket: s3.Bucket
 }
 
 export class RythmStandardPipeline extends Construct {
@@ -23,6 +27,8 @@ export class RythmStandardPipeline extends Construct {
         super(scope, id)
 
         const pipeline = new codepipeline.Pipeline(this, 'Pipeline', {
+            crossAccountKeys: true,
+            artifactBucket: props.codePipelineBucket,
             pipelineName: `${props.pipelineName}-pipeline`,
             role: props.pipelineRole,
         })
@@ -42,6 +48,7 @@ export class RythmStandardPipeline extends Construct {
         })
 
         const project = new codebuild.PipelineProject(this, 'Project', {
+            encryptionKey: props.kmsKey,
             projectName: `${props.pipelineName}-project`,
             buildSpec: codebuild.BuildSpec.fromSourceFilename(
                 'deployment/buildspec.yml'

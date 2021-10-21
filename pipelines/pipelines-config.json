@@ -1,0 +1,14 @@
+{
+    "standardPipelines": [
+        {
+            "name": "InfrastructurePipeline",
+            "pipelineName": "rythm-infrastructure",
+            "repoName": "rythm-infrastructure"
+        },
+        {
+            "name": "BinanceStreamPipeline",
+            "pipelineName": "rythm-binance-stream",
+            "repoName": "rythm-binance-stream"
+        }
+    ]
+}
