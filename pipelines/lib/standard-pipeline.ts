@@ -11,6 +11,7 @@ interface RythmStandardPipelineProps {
     readonly repoName: string
     readonly codestartConnectionArn: string
     readonly pipelineRole: iam.IRole
+    readonly buildRole: iam.Role
 }
 
 export class RythmStandardPipeline extends Construct {
@@ -48,6 +49,7 @@ export class RythmStandardPipeline extends Construct {
                 buildImage: codebuild.LinuxBuildImage.STANDARD_5_0,
                 privileged: true,
             },
+            role: props.buildRole,
         })
         const buildAction = new actions.CodeBuildAction({
             actionName: 'BuildAction',
