@@ -46,6 +46,7 @@ export class RythmPipelinesStack extends cdk.Stack {
                 repoName: 'rythm-infrastructure',
                 codestartConnectionArn: githubConnection.attrConnectionArn,
                 pipelineRole,
+                buildRole,
             }
         )
     }

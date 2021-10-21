@@ -11,7 +11,7 @@ interface RythmStandardPipelineProps {
     readonly repoName: string
     readonly codestartConnectionArn: string
     readonly pipelineRole: iam.IRole
-    readonly buildRole: iam.Role
+    readonly buildRole: iam.IRole
 }
 
 export class RythmStandardPipeline extends Construct {
