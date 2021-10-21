@@ -5,22 +5,24 @@ phases:
       python: 3.9
   pre_build:
     commands:
+      # setup
+      - dt=$(date '+%Y%m%d%H%M%S');
+      - project_name=pipeline
       - npm install -g aws-cdk@next
       - export COMMIT_HASH=SV_$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
       - export IMAGE_TAG=${COMMIT_HASH:=latest}
       - aws ecr get-login-password --region us-west-2 | docker login --username AWS --password-stdin 061973135686.dkr.ecr.us-west-2.amazonaws.com
   build:
     commands:
-      # setup
-      - echo --working --927
+      # build/install
+      - cd $CODEBUILD_SRC_DIR/deployment
       - npm install
       - npm build
-      - dt=$(date '+%Y%m%d%H%M%S');
-      # pipelines
-      - template_file_name=pipelines-template-$dt.yaml
-      - cd $CODEBUILD_SRC_DIR/pipelines
+      # deployment
+      - template_file_name=dev-template-$dt.yaml
+      - cd $CODEBUILD_SRC_DIR/deployment/src
       - cdk synth > $template_file_name
       - cat $template_file_name
-      - aws s3 cp $template_file_name s3://build.cdk.rythm.cc/pipelines/$template_file_name
+      - aws s3 cp $template_file_name s3://build.cdk.rythm.cc/$project_name/$template_file_name
       - cdk diff -c aws-cdk:enableDiffNoFail=true
       - cdk deploy
