@@ -11,7 +11,7 @@ export class RythmPipelinesStack extends cdk.Stack {
         // create a KMS key.
         // create roles for codebuild and codepipeline.
         const pipelineRole = new iam.Role(this, 'PipelineRole', {
-            roleName: 'rythm-build-role',
+            roleName: 'rythm-pipeline-role',
             assumedBy: new iam.ServicePrincipal('codepipeline.amazonaws.com'),
         })
 
