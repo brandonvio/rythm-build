@@ -33,6 +33,14 @@ export class RythmPipelinesStack extends cdk.Stack {
             }
         )
 
+        const leetBucket = new s3.Bucket(this, 'RythmLeetBucket', {
+            bucketName: 'leet.brandonv.io',
+            encryptionKey: kmsKey,
+            encryption: s3.BucketEncryption.KMS,
+            websiteIndexDocument: 'index.html',
+            publicReadAccess: true,
+        })
+
         // create roles for codebuild and codepipeline.
         const pipelineRole = new iam.Role(this, 'PipelineRole', {
             roleName: 'rythm-pipeline-role',
