@@ -9,6 +9,11 @@
             "name": "BinanceStreamPipeline",
             "pipelineName": "rythm-binance-stream",
             "repoName": "rythm-binance-stream"
+        },
+        {
+            "name": "leet",
+            "pipelineName": "leet",
+            "repoName": "leet"
         }
     ]
 }
