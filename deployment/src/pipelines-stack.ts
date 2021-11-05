@@ -26,7 +26,8 @@ export class RythmPipelinesStack extends cdk.Stack {
             'RythmCodePipelineBucket',
             {
                 bucketName: 'codepipeline.rythm.cc',
-                encryption: s3.BucketEncryption.S3_MANAGED,
+                encryptionKey: kmsKey,
+                encryption: s3.BucketEncryption.KMS,
                 blockPublicAccess: s3.BlockPublicAccess.BLOCK_ALL,
                 publicReadAccess: false,
             }
@@ -34,8 +35,7 @@ export class RythmPipelinesStack extends cdk.Stack {
 
         const leetBucket = new s3.Bucket(this, 'RythmLeetBucket', {
             bucketName: 'leet.brandonv.io',
-            encryptionKey: kmsKey,
-            encryption: s3.BucketEncryption.KMS,
+            encryption: s3.BucketEncryption.S3_MANAGED,
             websiteIndexDocument: 'index.html',
             publicReadAccess: true,
         })
